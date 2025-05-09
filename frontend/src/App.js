@@ -12,14 +12,30 @@ function App() {
   const fetchItems = async () => {
     try {
       const response = await axios.get(`${API_URL}/api/items`);
-      setItems(response.data);
-      setError(false); // Reset error if fetch is successful
-    } catch (error) {
-      console.error('Error fetching items:', error);
-      setError(true); // Set error state
+  
+      // Check for valid HTTP response
+      if (response.status !== 200) {
+        throw new Error(`Unexpected response status: ${response.status}`);
+      }
+  
+      const data = response.data;
+  
+      // Check if the response is an array
+      if (Array.isArray(data)) {
+        setItems(data);
+        setError(false); // ✅ Success, reset error
+      } else {
+        console.warn("Expected array but received:", data);
+        setItems([]);       // ⛔ Don't break the UI
+        setError(true);     // ⚠️ Show error in UI
+      }
+    } catch (err) {
+      console.error("Error fetching items from backend:", err.message || err);
+      setItems([]);         // ⛔ Prevent `.map()` crash
+      setError(true);       // ⚠️ Show error message in UI
     }
   };
-
+  
   useEffect(() => {
     fetchItems();
   }, []);
