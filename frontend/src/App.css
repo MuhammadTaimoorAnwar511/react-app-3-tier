@@ -111,6 +111,11 @@
 .delete-button:hover {
   background: #c0392b;
 }
+.error-state {
+  color: red;
+  font-weight: bold;
+  margin-top: 20px;
+}
 
 .empty-state {
   text-align: center;
