@@ -35,7 +35,7 @@ env:
   ECR_REPOSITORY: backend_ecr           # set this to your Amazon ECR repository name
   ECS_SERVICE: backend-service                 # set this to your Amazon ECS service name
   ECS_CLUSTER: backend-cluster                # set this to your Amazon ECS cluster name
-  ECS_TASK_DEFINITION: backend-task.json # set this to the path to your Amazon ECS task definition
+  ECS_TASK_DEFINITION: backend-task      # set this to the path to your Amazon ECS task definition
                                                # file, e.g. .aws/task-definition.json
   CONTAINER_NAME: backend-container           # set this to the name of the container in the
                                                # containerDefinitions section of your task definition
@@ -76,6 +76,9 @@ jobs:
         docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG ./backend
         docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
         echo "image=$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG" >> $GITHUB_OUTPUT
+    
+    - name: Download task definition
+      run: aws ecs describe-task-definition --task-definition ${{ env.TASK_DEFINITION }} --query taskDefinition > ${{ env.TASK_DEFINITION }}.json
 
     - name: Fill in the new image ID in the Amazon ECS task definition
       id: task-def
