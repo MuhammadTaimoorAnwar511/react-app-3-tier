@@ -35,7 +35,7 @@ env:
   ECR_REPOSITORY: backend_ecr           # set this to your Amazon ECR repository name
   ECS_SERVICE: backend-service                 # set this to your Amazon ECS service name
   ECS_CLUSTER: backend-cluster                # set this to your Amazon ECS cluster name
-  ECS_TASK_DEFINITION: backend-task # set this to the path to your Amazon ECS task definition
+  ECS_TASK_DEFINITION: .github/workflows/backend-task-revision4.json # set this to the path to your Amazon ECS task definition
                                                # file, e.g. .aws/task-definition.json
   CONTAINER_NAME: backend-container           # set this to the name of the container in the
                                                # containerDefinitions section of your task definition
@@ -79,7 +79,7 @@ jobs:
 
     - name: Fill in the new image ID in the Amazon ECS task definition
       id: task-def
-      uses: aws-actions/amazon-ecs-render-task-definition@v2
+      uses: aws-actions/amazon-ecs-render-task-definition@v1
       with:
         task-definition: ${{ env.ECS_TASK_DEFINITION }}
         container-name: ${{ env.CONTAINER_NAME }}
