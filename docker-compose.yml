@@ -1,0 +1,27 @@
+version: '3.8'
+
+services:
+  backend:
+    image: taimooranwar/threetier_backend:latest
+    container_name: backend
+    ports:
+      - "5000:5000"
+    env_file:
+      - ./backend/.env
+    restart: unless-stopped
+    working_dir: /usr/src/app
+
+  frontend:
+    image: taimooranwar/threetier_frontend:latest
+    container_name: frontend
+    ports:
+      - "3000:3000"
+    env_file:
+      - ./frontend/.env
+    restart: unless-stopped
+    working_dir: /app
+
+# Optional: Define a default network (Docker Compose does this automatically)
+networks:
+  default:
+    driver: bridge
