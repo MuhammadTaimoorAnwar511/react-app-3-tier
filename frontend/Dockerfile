@@ -1,23 +1,15 @@
-# Use the latest LTS version of Node.js
-FROM node:lts
-
-# Set the working directory inside the container
+# Stage 1: Build the React application
+FROM node:18-alpine as builder
 WORKDIR /app
-
-# Copy package.json and package-lock.json (if available)
 COPY package*.json ./
-
-# Install application dependencies
 RUN npm install
-
-# Copy the application code
-COPY . .
-
-# Build the application for production
+COPY . ./ 
 RUN npm run build
 
-# Expose the port the app runs on
+# Stage 2: Serve the application using serve
+FROM node:18-alpine
+WORKDIR /app
+COPY --from=builder /app/build ./
+RUN npm install -g serve
 EXPOSE 3000
-
-# Command to run the application
-CMD ["npm", "start"]
+CMD ["serve", "-s", ".", "-l", "3000"]
