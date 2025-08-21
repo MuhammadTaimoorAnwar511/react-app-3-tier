@@ -1,18 +1,21 @@
-# Use official Node image
-FROM node:18
+# Multi-stage Dockerfile for backend 
 
-# Create app directory
+# Builder stage: install all dependencies.
+FROM node:20-alpine AS builder
 WORKDIR /app
 
-# Install app dependencies
 COPY package*.json ./
 RUN npm install
 
-# Bundle app source
 COPY . .
 
-# Expose the port your app runs on
+# Project dependencies + source code
+FROM node:20-alpine AS production
+WORKDIR /app
+
+COPY --from=builder /app/node_modules ./node_modules
+COPY --from=builder /app .
+
 EXPOSE 5000
 
-# Command to run your app
-CMD [ "node", "server.js" ]
+CMD ["node", "server.js"]

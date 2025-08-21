@@ -48,7 +48,11 @@ app.get('/api/items', async (req, res) => {
 });
 // ✅ Root Route
 app.get('/', (req, res) => {
-  res.send('Backend is running successfully Taimoor');
+  res.status(200).send('Backend is running successfully Taimoor');
+});
+// ✅ Health Route
+app.get('/health', (req, res) => {
+  res.status(200).send('OK');
 });
 app.listen(process.env.PORT, () => {
   console.log(`Server running on port ${process.env.PORT}`);
